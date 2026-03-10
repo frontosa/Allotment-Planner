@@ -262,30 +262,50 @@
         });
       };
 
-      const ActionCard = ({ title, icon: Icon, items, colorClass, bgClass, borderClass }) => (
-        <div className={`rounded-xl border-t-4 ${borderClass} ${bgClass} p-5 shadow-sm transition-all hover:shadow-md h-full flex flex-col`}>
-          <div className="flex items-center gap-3 mb-4 pb-2 border-b border-white/40">
-            <div className={`p-2 rounded-lg bg-white/60 text-${colorClass}-700 shadow-sm`}>
-              <Icon size={22} className={`text-${colorClass}-600`} />
+      const ActionCard = ({ title, icon: Icon, items, colorClass, bgClass, borderClass }) => {
+        // Generates an Amazon search link for the vegetable seeds
+        // Replace 'YOUR_AMAZON_TAG_HERE' with your actual Amazon Affiliate ID!
+        const getAmazonLink = (itemName) => {
+          const searchTerm = encodeURIComponent(itemName + ' seeds uk');
+          const affiliateTag = 'frontosa-21'; 
+          return `https://www.amazon.co.uk/s?k=${searchTerm}&tag=${affiliateTag}`;
+        };
+
+        return (
+          <div className={`rounded-xl border-t-4 ${borderClass} ${bgClass} p-5 shadow-sm transition-all hover:shadow-md h-full flex flex-col`}>
+            <div className="flex items-center gap-3 mb-4 pb-2 border-b border-white/40">
+              <div className={`p-2 rounded-lg bg-white/60 text-${colorClass}-700 shadow-sm`}>
+                <Icon size={22} className={`text-${colorClass}-600`} />
+              </div>
+              <h3 className={`font-bold text-lg text-${colorClass}-900`}>{title}</h3>
             </div>
-            <h3 className={`font-bold text-lg text-${colorClass}-900`}>{title}</h3>
+            {items && items.length > 0 ? (
+              <ul className="space-y-3 flex-grow">
+                {items.map((item, idx) => (
+                  <li key={idx}>
+                    <a 
+                      href={getAmazonLink(item.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Search for ${item.name} seeds on Amazon`}
+                      className="flex items-center gap-3 bg-white/50 p-2 rounded-lg hover:bg-white hover:shadow-md transition-all cursor-pointer group"
+                    >
+                      <span className="text-2xl group-hover:scale-110 transition-transform" role="img" aria-label={item.name}>{item.icon}</span>
+                      <span className="font-medium text-gray-800 text-sm md:text-base leading-tight group-hover:text-blue-600 transition-colors">
+                        {item.name}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex-grow flex items-center justify-center text-gray-500 italic p-4 bg-white/30 rounded-lg">
+                Nothing to {title.toLowerCase()} this month.
+              </div>
+            )}
           </div>
-          {items && items.length > 0 ? (
-            <ul className="space-y-3 flex-grow">
-              {items.map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3 bg-white/50 p-2 rounded-lg">
-                  <span className="text-2xl" role="img" aria-label={item.name}>{item.icon}</span>
-                  <span className="font-medium text-gray-800 text-sm md:text-base leading-tight">{item.name}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="flex-grow flex items-center justify-center text-gray-500 italic p-4 bg-white/30 rounded-lg">
-              Nothing to {title.toLowerCase()} this month.
-            </div>
-          )}
-        </div>
-      );
+        );
+      };
 
       return (
         <div className="min-h-screen font-sans text-gray-800 selection:bg-green-200 pb-12 relative">
